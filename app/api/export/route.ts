@@ -1,32 +1,22 @@
 import { NextResponse } from "next/server";
-import { assertAdmin } from "@/lib/supabase/admin";
-import { demoApplications } from "@/lib/demo-admin";
+import { assertAdmin } from "@/lib/admin-auth";
+import { getAllApplicationsForExport } from "@/lib/supabase/services";
 import { toCsvCell } from "@/lib/utils";
+import type { Application } from "@/types/database";
 
 export async function GET(request: Request) {
   const admin = await assertAdmin(request.headers.get("authorization"));
   if (!admin.ok) return NextResponse.json({ error: admin.message }, { status: admin.status });
 
-  if (admin.demo) {
-    return csvResponse(demoApplications);
-  }
-
-  const { data, error } = await admin.service
-    .from("applications")
-    .select("*, work_links(url)")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return NextResponse.json({ error: "Could not export applications." }, { status: 500 });
-  }
-
-  return csvResponse(data || []);
+  const data = await getAllApplicationsForExport();
+  return csvResponse(data);
 }
 
-function csvResponse(data: typeof demoApplications) {
+function csvResponse(data: Application[]) {
   const header = [
     "Name",
     "Department",
+    "USN",
     "Phone",
     "Email",
     "Domain",
@@ -34,12 +24,13 @@ function csvResponse(data: typeof demoApplications) {
     "Expectations",
     "Status",
     "Created At",
-    "Work Links",
+    "Work Links & Explanations",
   ];
   const rows = data.map((item) =>
     [
       item.name,
       item.department,
+      item.usn,
       item.phone,
       item.email,
       item.domain,
@@ -47,7 +38,9 @@ function csvResponse(data: typeof demoApplications) {
       item.expectations,
       item.status,
       item.created_at,
-      (item.work_links || []).map((link: { url: string }) => link.url).join(" | "),
+      (item.work_links || [])
+        .map((link) => (link.description ? `${link.url} (${link.description})` : link.url))
+        .join(" | "),
     ].map(toCsvCell).join(","),
   );
 

@@ -35,13 +35,24 @@ const urlSchema = z
     }
   });
 
+export const workLinkItemSchema = z.object({
+  url: urlSchema,
+  description: z
+    .string()
+    .trim()
+    .max(1000, "Keep explanation under 1000 characters.")
+    .optional()
+    .default(""),
+});
+
 export const applicationSchema = z.object({
   name: z.string().trim().min(1, "Tell us your name."),
   department: z.string().trim().min(1, "Department is required."),
+  usn: z.string().trim().min(1, "USN is required."),
   phone: z.string().trim().min(1, "Phone number is required."),
   email: z.email("Use a valid email address.").trim().toLowerCase(),
   domain: z.enum(["TECH", "PR"], "Pick one domain."),
-  workLinks: z.array(urlSchema).min(1, "Add at least one work link."),
+  workLinks: z.array(workLinkItemSchema).min(1, "Add at least one work link."),
   improvementIdea: z
     .string()
     .trim()
@@ -60,4 +71,5 @@ export const adminUpdateSchema = z.object({
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
+export type WorkLinkInput = z.infer<typeof workLinkItemSchema>;
 export type AdminUpdateInput = z.infer<typeof adminUpdateSchema>;

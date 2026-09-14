@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { assertAdmin } from "@/lib/supabase/admin";
-import { demoApplications } from "@/lib/demo-admin";
+import { assertAdmin } from "@/lib/admin-auth";
 import { adminUpdateSchema } from "@/lib/validations/application";
+import { getApplicationById, updateApplication } from "@/lib/supabase/services";
 
 export async function GET(
   request: Request,
@@ -11,22 +11,11 @@ export async function GET(
   if (!admin.ok) return NextResponse.json({ error: admin.message }, { status: admin.status });
 
   const { id } = await params;
-  if (admin.demo) {
-    const application = demoApplications.find((item) => item.id === id);
-    if (!application) {
-      return NextResponse.json({ error: "Application not found." }, { status: 404 });
-    }
-    return NextResponse.json({ data: application });
+  const application = await getApplicationById(id);
+  if (!application) {
+    return NextResponse.json({ error: "Application not found." }, { status: 404 });
   }
-
-  const { data, error } = await admin.service
-    .from("applications")
-    .select("*, work_links(*)")
-    .eq("id", id)
-    .single();
-
-  if (error) return NextResponse.json({ error: "Application not found." }, { status: 404 });
-  return NextResponse.json({ data });
+  return NextResponse.json({ data: application });
 }
 
 export async function PATCH(
@@ -43,34 +32,14 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  if (admin.demo) {
-    const application = demoApplications.find((item) => item.id === id);
-    if (!application) {
-      return NextResponse.json({ error: "Application not found." }, { status: 404 });
-    }
-    return NextResponse.json({
-      data: {
-        ...application,
-        status: parsed.data.status,
-        admin_notes: parsed.data.adminNotes || null,
-        updated_at: new Date().toISOString(),
-      },
-    });
+  const updated = await updateApplication(id, {
+    status: parsed.data.status,
+    adminNotes: parsed.data.adminNotes,
+  });
+
+  if (!updated) {
+    return NextResponse.json({ error: "Application not found." }, { status: 404 });
   }
 
-  const { data, error } = await admin.service
-    .from("applications")
-    .update({
-      status: parsed.data.status,
-      admin_notes: parsed.data.adminNotes || null,
-    })
-    .eq("id", id)
-    .select("*, work_links(*)")
-    .single();
-
-  if (error) {
-    return NextResponse.json({ error: "Could not update application." }, { status: 500 });
-  }
-
-  return NextResponse.json({ data });
+  return NextResponse.json({ data: updated });
 }

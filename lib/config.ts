@@ -4,7 +4,7 @@ export const recruitmentConfig = {
   description:
     "A student community for learning cloud, building real projects, sharing ideas, and growing through technical and creative collaboration.",
   contactEmail: "awssbgclub@example.com",
-  socialUrl: process.env.NEXT_PUBLIC_AWS_CLUB_SOCIAL_URL || "",
+  socialUrl: "",
   domains: [
     {
       value: "TECH",

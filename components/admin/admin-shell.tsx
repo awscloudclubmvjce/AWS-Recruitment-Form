@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { clearDemoAdminSession, hasDemoAdminSession } from "@/lib/admin-fetch";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,14 +16,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  async function logout() {
-    if (hasDemoAdminSession()) {
-      clearDemoAdminSession();
-      router.push("/admin/login");
-      return;
-    }
-    const supabase = createClient();
-    await supabase.auth.signOut();
+  function logout() {
+    if (hasDemoAdminSession()) clearDemoAdminSession();
     router.push("/admin/login");
   }
 

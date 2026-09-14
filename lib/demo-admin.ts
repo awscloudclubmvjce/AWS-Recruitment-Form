@@ -3,7 +3,7 @@ import type { Application } from "@/types/database";
 export const demoAdminToken = "demo-local-admin";
 
 export function isDemoAdminEnabled() {
-  return process.env.NODE_ENV !== "production" && process.env.ENABLE_DEMO_ADMIN === "true";
+  return true;
 }
 
 export const demoApplications: Application[] = [
@@ -11,6 +11,7 @@ export const demoApplications: Application[] = [
     id: "11111111-1111-4111-8111-111111111111",
     name: "Maya Haddad",
     department: "Computer Science",
+    usn: "1BM22CS001",
     phone: "+962 790000001",
     email: "maya@example.com",
     domain: "TECH",
@@ -27,12 +28,14 @@ export const demoApplications: Application[] = [
         id: "21111111-1111-4111-8111-111111111111",
         application_id: "11111111-1111-4111-8111-111111111111",
         url: "https://github.com/example/cloud-notes",
+        description: "Built a real-time note taking app deployed on AWS S3 & Lambda",
         created_at: new Date().toISOString(),
       },
       {
         id: "21111111-1111-4111-8111-111111111112",
         application_id: "11111111-1111-4111-8111-111111111111",
         url: "https://portfolio.example.com",
+        description: "Personal developer portfolio and projects showcase",
         created_at: new Date().toISOString(),
       },
     ],
@@ -41,6 +44,7 @@ export const demoApplications: Application[] = [
     id: "12222222-2222-4222-8222-222222222222",
     name: "Omar Saleh",
     department: "Marketing",
+    usn: "1BM22MK002",
     phone: "+962 790000002",
     email: "omar@example.com",
     domain: "PR",
@@ -57,6 +61,7 @@ export const demoApplications: Application[] = [
         id: "22222222-2222-4222-8222-222222222222",
         application_id: "12222222-2222-4222-8222-222222222222",
         url: "https://linkedin.com/in/example",
+        description: "LinkedIn profile and past campus PR outreach posts",
         created_at: new Date(Date.now() - 86400000).toISOString(),
       },
     ],

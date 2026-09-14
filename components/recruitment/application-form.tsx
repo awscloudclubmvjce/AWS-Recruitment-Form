@@ -12,13 +12,19 @@ import { cn } from "@/lib/utils";
 
 const steps = ["YOU", "DOMAIN", "WORK", "IDEAS", "EXPECTATIONS", "DONE"];
 
+type WorkLinkItem = {
+  url: string;
+  description: string;
+};
+
 type FormState = {
   name: string;
   department: string;
+  usn: string;
   phone: string;
   email: string;
   domain: "" | "TECH" | "PR";
-  workLinks: string[];
+  workLinks: WorkLinkItem[];
   improvementIdea: string;
   expectations: string;
 };
@@ -26,21 +32,23 @@ type FormState = {
 const initialState: FormState = {
   name: "",
   department: "",
+  usn: "",
   phone: "",
   email: "",
   domain: "",
-  workLinks: [""],
+  workLinks: [{ url: "", description: "" }],
   improvementIdea: "",
   expectations: "",
 };
 
-type Errors = Partial<Record<keyof FormState | `workLinks.${number}` | "root", string>>;
+type Errors = Partial<Record<keyof FormState | `workLinks.${number}` | `workLinks.${number}.${string}` | "root", string>>;
 
 function stepSchema(step: number) {
   if (step === 0) {
     return applicationSchema.pick({
       name: true,
       department: true,
+      usn: true,
       phone: true,
       email: true,
     });
@@ -316,86 +324,69 @@ export function ApplicationForm() {
   }
 
   return (
-    <main style={{ minHeight: "100vh", padding: "1.5rem 5%" }}>
-      <section className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[0.42fr_0.58fr] gap-6">
+    <main className="min-h-screen px-4 py-6 sm:px-8 lg:px-12">
+      <section className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[0.42fr_0.58fr] gap-6 items-start">
 
         {/* ── Sidebar ── */}
-        <aside style={{ position: "sticky", top: "1.5rem", height: "calc(100vh - 3rem)" }}>
-          <div
-            className="glass-line"
-            style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "2rem" }}
-          >
-            <div>
-              <p className="mono" style={{ fontSize: "0.68rem", fontWeight: 700, color: "#ff9900", letterSpacing: "0.18em" }}>
-                {recruitmentConfig.clubName.toUpperCase()} / APPLY_{recruitmentConfig.year}
-              </p>
-              <h1
-                className="display"
-                style={{ marginTop: "1.25rem", fontSize: "clamp(3.5rem,6vw,5.5rem)", textTransform: "uppercase", lineHeight: 0.88 }}
-              >
-                Join The
-                <br />
-                <span className="shimmer-text">Build.</span>
-              </h1>
+        <aside className="lg:sticky lg:top-24 h-auto lg:h-[calc(100vh-7rem)] flex flex-col justify-between p-6 sm:p-8 glass-line gap-8">
+          <div>
+            <p className="mono text-xs font-bold text-[#ff9900] tracking-widest">
+              {recruitmentConfig.clubName.toUpperCase()} / APPLY_{recruitmentConfig.year}
+            </p>
+            <h1 className="display mt-3 text-5xl sm:text-6xl lg:text-7xl uppercase leading-none">
+              Join The
+              <br />
+              <span className="shimmer-text">Build.</span>
+            </h1>
+          </div>
+
+          <div>
+            {/* Segmented progress */}
+            <div className="seg-progress mb-5">
+              {steps.map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "seg-progress-item",
+                    i < step && "done",
+                    i === step && "active",
+                  )}
+                />
+              ))}
             </div>
 
-            <div>
-              {/* Segmented progress */}
-              <div className="seg-progress" style={{ marginBottom: "1.25rem" }}>
-                {steps.map((_, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      "seg-progress-item",
-                      i < step && "done",
-                      i === step && "active",
-                    )}
-                  />
-                ))}
-              </div>
+            {/* Step list */}
+            <ol className="grid gap-2">
+              {steps.map((label, index) => (
+                <li
+                  key={label}
+                  className={cn(
+                    "mono flex items-center justify-between border px-3 py-2.5 text-xs font-bold tracking-wider transition-all duration-200",
+                    index === step
+                      ? "border-[#ff9900] text-[#ff9900] bg-[#ff9900]/10"
+                      : index < step
+                      ? "border-white/10 text-white/55"
+                      : "border-white/10 text-white/28"
+                  )}
+                >
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <span>{label}</span>
+                  {index < step && <Check size={14} className="text-[#ff9900]" />}
+                </li>
+              ))}
+            </ol>
 
-              {/* Step list */}
-              <ol style={{ display: "grid", gap: "0.5rem" }}>
-                {steps.map((label, index) => (
-                  <li
-                    key={label}
-                    className="mono"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      border: `1px solid ${index === step ? "#ff9900" : "rgba(255,255,255,0.1)"}`,
-                      padding: "0.6rem 0.85rem",
-                      fontSize: "0.72rem",
-                      fontWeight: 700,
-                      color: index === step ? "#ff9900" : index < step ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.28)",
-                      letterSpacing: "0.1em",
-                      background: index === step ? "rgba(255,153,0,0.07)" : "transparent",
-                      transition: "all 250ms ease",
-                    }}
-                  >
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <span>{label}</span>
-                    {index < step && <Check size={12} color="#ff9900" />}
-                  </li>
-                ))}
-              </ol>
-
-              <div style={{ marginTop: "1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span className="pulse-dot" />
-                <span className="mono" style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.35)", letterSpacing: "0.08em" }}>
-                  ~4 MIN TO COMPLETE
-                </span>
-              </div>
+            <div className="mt-5 flex items-center gap-2">
+              <span className="pulse-dot" />
+              <span className="mono text-[0.65rem] text-white/40 tracking-wider">
+                ~4 MIN TO COMPLETE
+              </span>
             </div>
           </div>
         </aside>
 
         {/* ── Form Panel ── */}
-        <section
-          className="glass-line"
-          style={{ minHeight: "calc(100vh - 3rem)", padding: "2.5rem" }}
-        >
+        <section className="glass-line p-6 sm:p-8 lg:p-10 min-h-[500px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -403,7 +394,7 @@ export function ApplicationForm() {
               animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, x: -32, filter: "blur(4px)" }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: "flex", minHeight: "calc(100vh - 7rem)", flexDirection: "column" }}
+              className="flex flex-col min-h-[450px] justify-between"
             >
               <div style={{ flex: 1 }}>{renderStep()}</div>
 
@@ -445,6 +436,7 @@ export function ApplicationForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FloatInput label="Full Name" error={errors.name} value={form.name} onChange={(e) => update("name", e.target.value)} />
             <FloatInput label="Department" error={errors.department} value={form.department} onChange={(e) => update("department", e.target.value)} />
+            <FloatInput label="USN" error={errors.usn} value={form.usn} onChange={(e) => update("usn", e.target.value)} />
             <FloatInput label="Phone Number" error={errors.phone} value={form.phone} onChange={(e) => update("phone", e.target.value)} inputMode="tel" />
             <FloatInput label="Email" error={errors.email} value={form.email} onChange={(e) => update("email", e.target.value)} inputMode="email" />
           </div>
@@ -537,29 +529,57 @@ export function ApplicationForm() {
             title="Show. Don't Tell."
             copy="Got something you've built, designed, written, organized or worked on? Show us."
           />
-          <div style={{ display: "grid", gap: "1rem" }}>
-            {form.workLinks.map((link, index) => (
-              <div key={index} style={{ display: "grid", gap: "0.5rem", gridTemplateColumns: "1fr auto", alignItems: "start" }}>
+          <div style={{ display: "grid", gap: "1.25rem" }}>
+            {form.workLinks.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: "1.25rem",
+                  display: "grid",
+                  gap: "0.85rem",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span className="mono" style={{ fontSize: "0.72rem", fontWeight: 700, color: "#ff9900", letterSpacing: "0.1em" }}>
+                    WORK LINK {index + 1}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    style={{ padding: "0.2rem 0.5rem" }}
+                    onClick={() =>
+                      update(
+                        "workLinks",
+                        form.workLinks.filter((_, i) => i !== index).length
+                          ? form.workLinks.filter((_, i) => i !== index)
+                          : [{ url: "", description: "" }],
+                      )
+                    }
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+
                 <div style={{ display: "grid", gap: "0.35rem" }}>
                   <div className="float-label-wrap">
                     <input
                       className="focus-field"
                       style={{ minHeight: 52, width: "100%", padding: "1.25rem 1rem 0.4rem", fontSize: "1rem", color: "white" }}
-                      value={link}
+                      value={item.url}
                       placeholder=" "
                       onChange={(e) => {
                         const next = [...form.workLinks];
-                        next[index] = e.target.value;
+                        next[index] = { ...next[index], url: e.target.value };
                         update("workLinks", next);
                       }}
                       inputMode="url"
                     />
-                    <span className="float-label">Work Link {index + 1}</span>
+                    <span className="float-label">Work Link URL (GitHub, Behance, Live App, Drive)</span>
                   </div>
-                  {/* URL preview pill */}
-                  {link && (
+                  {item.url && (
                     <motion.div
-                      initial={{ opacity: 0, y: -6 }}
+                      initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       style={{
                         display: "inline-flex", alignItems: "center", gap: "0.4rem",
@@ -569,27 +589,43 @@ export function ApplicationForm() {
                       }}
                     >
                       <ExternalLink size={10} />
-                      {link}
+                      {item.url}
                     </motion.div>
                   )}
-                  {errors[`workLinks.${index}`] && (
-                    <span style={{ fontSize: "0.8rem", color: "#ffb84d" }}>{errors[`workLinks.${index}`]}</span>
+                  {(errors[`workLinks.${index}.url`] || errors[`workLinks.${index}`]) && (
+                    <span style={{ fontSize: "0.8rem", color: "#ffb84d" }}>
+                      {errors[`workLinks.${index}.url`] || errors[`workLinks.${index}`]}
+                    </span>
                   )}
                 </div>
-                <Button
-                  variant="ghost"
-                  style={{ marginTop: 0, alignSelf: "start" }}
-                  onClick={() =>
-                    update("workLinks", form.workLinks.filter((_, i) => i !== index).length
-                      ? form.workLinks.filter((_, i) => i !== index)
-                      : [""])
-                  }
-                >
-                  <Trash2 size={16} />
-                </Button>
+
+                <div style={{ display: "grid", gap: "0.35rem" }}>
+                  <div className="float-label-wrap">
+                    <textarea
+                      className="focus-field"
+                      style={{ minHeight: 70, width: "100%", padding: "1.25rem 1rem 0.4rem", fontSize: "0.95rem", color: "white", resize: "vertical" }}
+                      value={item.description}
+                      placeholder=" "
+                      onChange={(e) => {
+                        const next = [...form.workLinks];
+                        next[index] = { ...next[index], description: e.target.value };
+                        update("workLinks", next);
+                      }}
+                    />
+                    <span className="float-label">Explanation of this work / What did you build or do?</span>
+                  </div>
+                  {errors[`workLinks.${index}.description`] && (
+                    <span style={{ fontSize: "0.8rem", color: "#ffb84d" }}>
+                      {errors[`workLinks.${index}.description`]}
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
-            <Button variant="ghost" onClick={() => update("workLinks", [...form.workLinks, ""])}>
+            <Button
+              variant="ghost"
+              onClick={() => update("workLinks", [...form.workLinks, { url: "", description: "" }])}
+            >
               <Plus size={16} />
               Add Another Link
             </Button>
@@ -625,6 +661,11 @@ export function ApplicationForm() {
     }
 
     // Step 5 — Review
+    const workLinksSummary = form.workLinks
+      .filter((l) => l.url.trim())
+      .map((l) => (l.description.trim() ? `${l.url}\n  ↳ ${l.description.trim()}` : l.url))
+      .join("\n\n");
+
     return (
       <div>
         <StepHeading kicker="06 — DONE" title="Review The Signal." />
@@ -632,10 +673,11 @@ export function ApplicationForm() {
           {([
             ["Name", form.name],
             ["Department", form.department],
-            ["Email", form.email],
+            ["USN", form.usn],
             ["Phone", form.phone],
+            ["Email", form.email],
             ["Domain", form.domain],
-            ["Work Links", form.workLinks.filter(Boolean).join("\n")],
+            ["Work Links & Explanations", workLinksSummary],
             ["Club Improvement", form.improvementIdea],
             ["Expectations", form.expectations],
           ] as [string, string][]).map(([label, value], i) => (

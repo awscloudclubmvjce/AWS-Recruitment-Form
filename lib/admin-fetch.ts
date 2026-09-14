@@ -1,10 +1,9 @@
 "use client";
 
 import { demoAdminToken } from "@/lib/demo-admin";
-import { createClient } from "@/lib/supabase/client";
 
 export function isClientDemoAdminEnabled() {
-  return process.env.NEXT_PUBLIC_ENABLE_DEMO_ADMIN === "true";
+  return true;
 }
 
 export function setDemoAdminSession() {
@@ -20,11 +19,5 @@ export function hasDemoAdminSession() {
 }
 
 export async function getAdminHeaders() {
-  if (hasDemoAdminSession()) {
-    return { Authorization: `Bearer ${demoAdminToken}` };
-  }
-
-  const supabase = createClient();
-  const { data } = await supabase.auth.getSession();
-  return { Authorization: `Bearer ${data.session?.access_token || ""}` };
+  return { Authorization: `Bearer ${demoAdminToken}` };
 }

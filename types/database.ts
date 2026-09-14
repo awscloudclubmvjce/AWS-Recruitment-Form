@@ -12,6 +12,7 @@ export type WorkLink = {
   id: string;
   application_id: string;
   url: string;
+  description?: string | null;
   created_at: string;
 };
 
@@ -19,6 +20,7 @@ export type Application = {
   id: string;
   name: string;
   department: string;
+  usn: string;
   phone: string;
   email: string;
   domain: Domain;

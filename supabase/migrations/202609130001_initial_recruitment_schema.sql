@@ -9,6 +9,7 @@ create table public.applications (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   department text not null,
+  usn text not null,
   phone text not null,
   email text not null,
   domain text not null,

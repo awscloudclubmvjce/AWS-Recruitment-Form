@@ -92,25 +92,32 @@ export function ApplicationDetail({ id }: { id: string }) {
       <section className="grid gap-4 lg:grid-cols-2">
         <Panel title="Personal Details">
           <Info label="Department" value={item.department} />
-          <Info label="Email" value={item.email} />
+          <Info label="USN" value={item.usn} />
           <Info label="Phone" value={item.phone} />
+          <Info label="Email" value={item.email} />
         </Panel>
         <Panel title="Domain">
           <p className="text-4xl font-black text-[#ff9900]">{item.domain}</p>
         </Panel>
-        <Panel title="Work">
-          <div className="grid gap-2">
+        <Panel title="Work & Explanations">
+          <div className="grid gap-3">
             {(item.work_links || []).map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="flex items-center justify-between gap-3 border border-white/12 p-3 text-[#ff9900] hover:border-[#ff9900]"
-              >
-                <span className="break-all">{link.url}</span>
-                <ExternalLink size={16} aria-hidden="true" />
-              </a>
+              <div key={link.id} className="border border-white/12 p-3.5 grid gap-1.5">
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="flex items-center justify-between gap-3 text-[#ff9900] hover:underline font-mono text-sm"
+                >
+                  <span className="break-all">{link.url}</span>
+                  <ExternalLink size={14} className="shrink-0" aria-hidden="true" />
+                </a>
+                {link.description ? (
+                  <p className="text-xs text-white/76 leading-relaxed border-t border-white/8 pt-1.5 mt-0.5">
+                    {link.description}
+                  </p>
+                ) : null}
+              </div>
             ))}
           </div>
         </Panel>
