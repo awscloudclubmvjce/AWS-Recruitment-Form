@@ -837,6 +837,17 @@ function EssayStep({
   border-color: #ff9900 !important;
   box-shadow: 4px 4px 0 rgba(255,153,0,.25) !important;
 }
+.aws-form-page .focus-field::placeholder {
+  color: rgba(36,36,43,.38) !important;
+}
+.aws-form-page input:-webkit-autofill,
+.aws-form-page input:-webkit-autofill:hover,
+.aws-form-page input:-webkit-autofill:focus,
+.aws-form-page textarea:-webkit-autofill {
+  -webkit-text-fill-color: #24242b !important;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
 
 .aws-form-page .domain-choice {
   border: 1px solid #24242b !important;
