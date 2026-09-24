@@ -62,3 +62,5 @@ npm run start
 4. Deploy.
 
 The service-role key must be configured only as a server-side environment variable in Vercel.
+
+
