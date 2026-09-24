@@ -80,14 +80,14 @@ function FloatInput({
       <div className="float-label-wrap">
         <input
           className="focus-field"
-          style={{ minHeight: 56, width: "100%", padding: "1.4rem 1rem 0.5rem", fontSize: "1rem", color: "white" }}
+          style={{ minHeight: 56, width: "100%", padding: "1.4rem 1rem 0.5rem", fontSize: "1rem" }}
           placeholder=" "
           {...props}
         />
         <span className="float-label">{label}</span>
       </div>
       {error && (
-        <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#ffb84d" }} role="alert">
+        <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#e43d1f" }} role="alert">
           {error}
         </span>
       )}
@@ -106,7 +106,7 @@ function WordCountRing({ current, max }: { current: number; max: number }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "flex-end", marginTop: "0.5rem" }}>
       <svg width={44} height={44} style={{ transform: "rotate(-90deg)" }}>
-        <circle cx={22} cy={22} r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={3} />
+        <circle cx={22} cy={22} r={r} fill="none" stroke="rgba(36,36,43,0.14)" strokeWidth={3} />
         <circle
           cx={22} cy={22} r={r} fill="none"
           stroke={color} strokeWidth={3}
@@ -116,7 +116,7 @@ function WordCountRing({ current, max }: { current: number; max: number }) {
           style={{ transition: "stroke-dashoffset 200ms ease, stroke 200ms ease" }}
         />
       </svg>
-      <span className="mono" style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)" }}>
+      <span className="mono" style={{ fontSize: "0.68rem", color: "#5d5b57" }}>
         {current}/{max}
       </span>
     </div>
@@ -172,7 +172,7 @@ function SuccessScreen({ socialUrl }: { socialUrl?: string }) {
   }, []);
 
   return (
-    <main style={{ display: "flex", minHeight: "100vh", alignItems: "center", padding: "3rem 5%" }}>
+    <main className="aws-form-success" style={{ display: "flex", minHeight: "100vh", alignItems: "center", padding: "3rem 5%" }}>
       <motion.section
         style={{ margin: "0 auto", maxWidth: 900 }}
         initial={{ opacity: 0, y: 32 }}
@@ -213,7 +213,7 @@ function SuccessScreen({ socialUrl }: { socialUrl?: string }) {
         >
           Application
           <br />
-          <span className="shimmer-text">Submitted.</span>
+          <span className="success-accent">Submitted.</span>
           <br />
           <span style={{ color: "#ff9900" }}>Now Let&apos;s Build.</span>
         </motion.h1>
@@ -324,11 +324,11 @@ export function ApplicationForm() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-6 sm:px-8 lg:px-12">
+    <main className="aws-form-page min-h-screen px-4 py-6 sm:px-8 lg:px-12">
       <section className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[0.42fr_0.58fr] gap-6 items-start">
 
         {/* ── Sidebar ── */}
-        <aside className="lg:sticky lg:top-24 h-auto lg:h-[calc(100vh-7rem)] flex flex-col justify-between p-6 sm:p-8 glass-line gap-8">
+        <aside className="aws-form-sidebar lg:sticky lg:top-24 h-auto lg:h-[calc(100vh-7rem)] flex flex-col justify-between p-6 sm:p-8 glass-line gap-8">
           <div>
             <p className="mono text-xs font-bold text-[#ff9900] tracking-widest">
               {recruitmentConfig.clubName.toUpperCase()} / APPLY_{recruitmentConfig.year}
@@ -386,7 +386,7 @@ export function ApplicationForm() {
         </aside>
 
         {/* ── Form Panel ── */}
-        <section className="glass-line p-6 sm:p-8 lg:p-10 min-h-[500px]">
+        <section className="aws-form-panel glass-line p-6 sm:p-8 lg:p-10 min-h-[500px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -399,7 +399,7 @@ export function ApplicationForm() {
               <div style={{ flex: 1 }}>{renderStep()}</div>
 
               {errors.root && (
-                <p style={{ marginTop: "1.5rem", border: "1px solid rgba(255,153,0,0.35)", background: "rgba(255,153,0,0.1)", padding: "1rem", fontSize: "0.875rem", fontWeight: 600, color: "#ffd28a" }}>
+                <p style={{ marginTop: "1.5rem", border: "1px solid rgba(255,153,0,0.35)", background: "rgba(255,153,0,0.1)", padding: "1rem", fontSize: "0.875rem", fontWeight: 600, color: "#8f2b17" }}>
                   {errors.root}
                 </p>
               )}
@@ -454,6 +454,7 @@ export function ApplicationForm() {
               return (
                 <motion.button
                   key={domain.value}
+                  className="domain-choice"
                   type="button"
                   onClick={() => update("domain", domain.value)}
                   whileHover={{ y: -6 }}
@@ -516,7 +517,7 @@ export function ApplicationForm() {
               );
             })}
           </div>
-          {errors.domain && <p style={{ marginTop: "1rem", fontSize: "0.8rem", fontWeight: 600, color: "#ffb84d" }}>{errors.domain}</p>}
+          {errors.domain && <p style={{ marginTop: "1rem", fontSize: "0.8rem", fontWeight: 600, color: "#e43d1f" }}>{errors.domain}</p>}
         </div>
       );
     }
@@ -533,9 +534,10 @@ export function ApplicationForm() {
             {form.workLinks.map((item, index) => (
               <div
                 key={index}
+                className="work-link-card"
                 style={{
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(36,36,43,0.12)",
+                  background: "#fffefa",
                   padding: "1.25rem",
                   display: "grid",
                   gap: "0.85rem",
@@ -585,7 +587,7 @@ export function ApplicationForm() {
                         display: "inline-flex", alignItems: "center", gap: "0.4rem",
                         background: "rgba(255,153,0,0.1)", border: "1px solid rgba(255,153,0,0.3)",
                         padding: "0.25rem 0.75rem", fontSize: "0.7rem", fontFamily: "JetBrains Mono, monospace",
-                        color: "#ffb84d", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                        color: "#e43d1f", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                       }}
                     >
                       <ExternalLink size={10} />
@@ -593,7 +595,7 @@ export function ApplicationForm() {
                     </motion.div>
                   )}
                   {(errors[`workLinks.${index}.url`] || errors[`workLinks.${index}`]) && (
-                    <span style={{ fontSize: "0.8rem", color: "#ffb84d" }}>
+                    <span style={{ fontSize: "0.8rem", color: "#e43d1f" }}>
                       {errors[`workLinks.${index}.url`] || errors[`workLinks.${index}`]}
                     </span>
                   )}
@@ -603,7 +605,7 @@ export function ApplicationForm() {
                   <div className="float-label-wrap">
                     <textarea
                       className="focus-field"
-                      style={{ minHeight: 70, width: "100%", padding: "1.25rem 1rem 0.4rem", fontSize: "0.95rem", color: "white", resize: "vertical" }}
+                      style={{ minHeight: 70, width: "100%", padding: "1.25rem 1rem 0.4rem", fontSize: "0.95rem", resize: "vertical" }}
                       value={item.description}
                       placeholder=" "
                       onChange={(e) => {
@@ -615,7 +617,7 @@ export function ApplicationForm() {
                     <span className="float-label">Explanation of this work / What did you build or do?</span>
                   </div>
                   {errors[`workLinks.${index}.description`] && (
-                    <span style={{ fontSize: "0.8rem", color: "#ffb84d" }}>
+                    <span style={{ fontSize: "0.8rem", color: "#e43d1f" }}>
                       {errors[`workLinks.${index}.description`]}
                     </span>
                   )}
@@ -683,6 +685,7 @@ export function ApplicationForm() {
           ] as [string, string][]).map(([label, value], i) => (
             <motion.div
               key={label}
+              className="review-card"
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
@@ -696,7 +699,7 @@ export function ApplicationForm() {
               <p className="mono" style={{ fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", color: "#ff9900", letterSpacing: "0.12em", marginBottom: "0.4rem" }}>
                 {label}
               </p>
-              <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(255,255,255,0.82)", whiteSpace: "pre-wrap" }}>
+              <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "#24242b", whiteSpace: "pre-wrap" }}>
                 {value || "—"}
               </p>
             </motion.div>
@@ -718,7 +721,7 @@ function StepHeading({ kicker, title, copy }: { kicker: string; title: string; c
         {title}
       </h2>
       {copy && (
-        <p style={{ marginTop: "1rem", maxWidth: 560, fontSize: "1rem", lineHeight: 1.7, color: "rgba(255,255,255,0.58)" }}>
+        <p style={{ marginTop: "1rem", maxWidth: 560, fontSize: "1rem", lineHeight: 1.7, color: "#5d5b57" }}>
           {copy}
         </p>
       )}
@@ -741,22 +744,155 @@ function EssayStep({
     <div>
       <StepHeading kicker={kicker} title={title} />
       <div style={{ display: "grid", gap: "0.4rem" }}>
-        <p className="mono" style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", color: "rgba(255,255,255,0.5)", letterSpacing: "0.08em" }}>
+        <p className="mono" style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", color: "#5d5b57", letterSpacing: "0.08em" }}>
           {question}
         </p>
         <div className="float-label-wrap">
           <textarea
             className="focus-field"
-            style={{ minHeight: 220, width: "100%", resize: "vertical", padding: "1rem", fontSize: "1rem", lineHeight: 1.75, color: "white" }}
+            style={{ minHeight: 220, width: "100%", resize: "vertical", padding: "1rem", fontSize: "1rem", lineHeight: 1.75 }}
             value={value}
             maxLength={MAX}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Write like a person. Specific beats perfect."
           />
         </div>
-        {error && <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#ffb84d" }} role="alert">{error}</span>}
+        {error && <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#e43d1f" }} role="alert">{error}</span>}
         <WordCountRing current={value.length} max={MAX} />
       </div>
     </div>
   );
 }
+
+.aws-form-page {
+  background: #f4f1ec;
+  color: #24242b;
+}
+
+.aws-form-page .aws-form-sidebar {
+  background: #24242b !important;
+  color: #fff !important;
+  border: 1px solid #24242b !important;
+  box-shadow: 8px 8px 0 #e43d1f !important;
+}
+
+.aws-form-page .aws-form-sidebar .mono { color: inherit; }
+.aws-form-page .aws-form-sidebar .shimmer-text {
+  color: #ff9900 !important;
+  background: none !important;
+  -webkit-text-fill-color: #ff9900 !important;
+}
+.aws-form-page .aws-form-sidebar .seg-progress-item {
+  background: rgba(255,255,255,.16);
+}
+.aws-form-page .aws-form-sidebar .seg-progress-item.done,
+.aws-form-page .aws-form-sidebar .seg-progress-item.active {
+  background: #ff9900;
+}
+.aws-form-page .aws-form-sidebar ol li {
+  border-color: rgba(255,255,255,.12) !important;
+  color: rgba(255,255,255,.42) !important;
+}
+.aws-form-page .aws-form-sidebar ol li:first-child,
+.aws-form-page .aws-form-sidebar ol li[class*="border-[#ff9900]"] {
+  border-color: #ff9900 !important;
+  color: #ff9900 !important;
+  background: rgba(255,153,0,.12) !important;
+}
+.aws-form-page .aws-form-sidebar .text-white\/55 { color: rgba(255,255,255,.56) !important; }
+.aws-form-page .aws-form-sidebar .text-white\/28 { color: rgba(255,255,255,.28) !important; }
+.aws-form-page .aws-form-sidebar .text-white\/40 { color: rgba(255,255,255,.42) !important; }
+
+.aws-form-page .aws-form-panel {
+  background: #fffefa !important;
+  color: #24242b !important;
+  border: 1px solid #24242b !important;
+  box-shadow: 8px 8px 0 #e43d1f !important;
+}
+
+.aws-form-page .aws-form-panel .display,
+.aws-form-page .aws-form-panel h2,
+.aws-form-page .aws-form-panel h3 {
+  color: #24242b;
+}
+.aws-form-page .aws-form-panel .mono { color: #5d5b57; }
+
+.aws-form-page .float-label {
+  color: #5d5b57 !important;
+}
+.aws-form-page .float-label-wrap input:focus ~ .float-label,
+.aws-form-page .float-label-wrap input:not(:placeholder-shown) ~ .float-label,
+.aws-form-page .float-label-wrap textarea:focus ~ .float-label,
+.aws-form-page .float-label-wrap textarea:not(:placeholder-shown) ~ .float-label {
+  color: #e43d1f !important;
+}
+
+.aws-form-page .focus-field {
+  background: #fff !important;
+  color: #24242b !important;
+  border-color: #24242b !important;
+  box-shadow: none;
+}
+.aws-form-page .focus-field:focus {
+  border-color: #ff9900 !important;
+  box-shadow: 4px 4px 0 rgba(255,153,0,.25) !important;
+}
+
+.aws-form-page .domain-choice {
+  border: 1px solid #24242b !important;
+  background: #fffefa !important;
+  color: #24242b !important;
+  box-shadow: 5px 5px 0 rgba(36,36,43,.08) !important;
+}
+.aws-form-page .domain-choice:hover {
+  border-color: #e43d1f !important;
+}
+.aws-form-page .domain-choice[style*="2px solid"] {
+  border-color: #ff9900 !important;
+  background: #fff1ae !important;
+  box-shadow: 6px 6px 0 rgba(228,61,31,.14) !important;
+}
+.aws-form-page .domain-choice h2,
+.aws-form-page .domain-choice p {
+  color: #24242b !important;
+}
+.aws-form-page .domain-choice .mono {
+  color: #e43d1f !important;
+}
+.aws-form-page .domain-choice > p {
+  color: #5d5b57 !important;
+}
+
+.aws-form-page .work-link-card,
+.aws-form-page .review-card {
+  border-color: #24242b !important;
+  background: #fffefa !important;
+  color: #24242b !important;
+  box-shadow: 5px 5px 0 rgba(36,36,43,.08);
+}
+.aws-form-page .work-link-card .mono,
+.aws-form-page .review-card .mono {
+  color: #e43d1f !important;
+}
+.aws-form-page .work-link-card [style*="rgba(255,153,0,.1)"] {
+  background: #fff1ae !important;
+  border-color: #e43d1f !important;
+  color: #24242b !important;
+}
+.aws-form-page .review-card {
+  border-left: 4px solid #e43d1f !important;
+}
+.aws-form-page [role="alert"] {
+  color: #e43d1f !important;
+}
+.aws-form-success {
+  background: #f4f1ec !important;
+  color: #24242b !important;
+}
+.aws-form-success .success-accent {
+  color: #e43d1f !important;
+  background: none !important;
+  -webkit-text-fill-color: #e43d1f !important;
+}
+.aws-form-success h1 { color: #24242b; }
+.aws-form-success p { color: #5d5b57 !important; }
